@@ -60,18 +60,5 @@ namespace WPF_App.Methods
         {
             _words = _words.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
         }
-
-        /*
-         * private Dictionary<string, int> SortWordsAsync(Dictionary<string, int> words)
-           {
-           var sortedDict = words.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
-           return sortedDict;
-           }
-         */
-        
-
     }
 }
-
-//                    _words.AddOrUpdate(parsedStrings[i], 1, (key, value) => value + 1);
-// 

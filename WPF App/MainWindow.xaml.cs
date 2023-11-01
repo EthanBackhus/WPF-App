@@ -34,6 +34,7 @@ namespace WPF_App
         private IDisplay _display;
         private IFileReader _fileReader;
         private TextBox _rawTextBox, _outputTextBox;
+        private ProgressBar _progressBar;
 
         public MainWindow()
         {
@@ -43,7 +44,8 @@ namespace WPF_App
             _fileReader = new FileReader();
             _display = new Display(_rawTextBox, _outputTextBox);
             _fileParser = new FileParse();
-            _fileProcessor = new FileProcessor(_fileParser, _display, _fileReader);
+            _progressBar = progressBar;
+            _fileProcessor = new FileProcessor(_fileParser, _display, _fileReader, progressBar);
         }
 
         private void Browse_Click(object sender, RoutedEventArgs e)
