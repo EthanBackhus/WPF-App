@@ -1,0 +1,24 @@
+﻿<Window x:Class="WPF_App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF_App"
+        xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=System.ComponentModel.EventBasedAsync"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Label Content="Raw Output:" HorizontalAlignment="Left" Margin="441,44,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.228,0.015" Width="157"/>
+        <TextBox Name="rawTextBox"  HorizontalAlignment="Left" Margin="441,75,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="275" Height="94" VerticalScrollBarVisibility="Auto" IsReadOnly="True"/>
+        <TextBox Name="outputTextBox" HorizontalAlignment="Left" Margin="52,244,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="348" Height="157" VerticalScrollBarVisibility="Auto" IsReadOnly="True"/>
+        <Label Content="Output:" HorizontalAlignment="Left" Margin="52,213,0,0" VerticalAlignment="Top" Width="128"/>
+        <ProgressBar Name="progressBar"  HorizontalAlignment="Left" Height="15" Margin="52,137,0,0" VerticalAlignment="Top" Width="275"/>
+        <Button Content="Cancel" Name="cancelButton" HorizontalAlignment="Left" Margin="96,166,0,0" VerticalAlignment="Top" Click="Cancel_Click"/>
+        <Button Content="Browse File" Name="browseButton" HorizontalAlignment="Left" Margin="53,81,0,0" VerticalAlignment="Top" Width="150" Click="Browse_Click"/>
+        <Button Content="Start" Name="startButton" HorizontalAlignment="Left" Margin="53,166,0,0" VerticalAlignment="Top" Click="Start_Click"/>
+        <Label Content="Selected File: " Name="selectedFileLabel" HorizontalAlignment="Left" Margin="53,106,0,0" VerticalAlignment="Top" Width="186"/>
+    </Grid>
+
+    
+
+</Window>
