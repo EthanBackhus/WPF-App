@@ -91,7 +91,7 @@ namespace WPF_App
             }
             finally
             {
-                _cancellationTokenSource?.Dispose();
+                //_cancellationTokenSource?.Dispose();
             }
 
         }

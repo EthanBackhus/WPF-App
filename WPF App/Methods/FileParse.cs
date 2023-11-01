@@ -13,7 +13,7 @@ namespace WPF_App.Methods
 {
     public class FileParse : IFileParse
     {
-        private ConcurrentDictionary<string, int> _words;
+        private Dictionary<string, int> _words;
 
         
         public FileParse()
@@ -24,12 +24,10 @@ namespace WPF_App.Methods
 
         public async Task<Dictionary<string, int>> ParseFileAsync(string fileContent, IProgress<int> progress, CancellationToken cancellationToken)
         {
-            var _words = new Dictionary<string, int>();
+            _words = new Dictionary<string, int>();
 
             var updatedFileContent = RemoveAllNewlines(fileContent);
             string[] parsedStrings = updatedFileContent.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            //foreach (var str in parsedStrings)
-            // parsedStrings[i] = str
             for(int i = 0; i < parsedStrings.Length; i++)
             {
                 cancellationToken.ThrowIfCancellationRequested();
@@ -58,10 +56,18 @@ namespace WPF_App.Methods
         }
 
         
-        private async Task SortWordsAsync()
+        private void SortWordsAsync()
         {
             _words = _words.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
         }
+
+        /*
+         * private Dictionary<string, int> SortWordsAsync(Dictionary<string, int> words)
+           {
+           var sortedDict = words.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
+           return sortedDict;
+           }
+         */
         
 
     }
