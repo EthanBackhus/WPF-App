@@ -22,7 +22,7 @@ namespace WPF_App.Methods
 
         public async Task<string> ProcessFileAsync1(string filePath, IProgress<int> progress, CancellationToken cancellationToken)
         { 
-             var fileContent = await Task.Run(() => _fileReader.ReadFileAsync(filePath, progress));
+             var fileContent = await Task.Run(() => _fileReader.ReadFileAsync(filePath, progress, cancellationToken));
              return fileContent;
         }
 

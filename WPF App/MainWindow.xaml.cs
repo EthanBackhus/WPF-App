@@ -82,7 +82,8 @@ namespace WPF_App
             try
             {
                 var progress = new Progress<int>(x => progressBar.Value = x);
-                var fileContent= await Task.Run(() => _fileProcessor.ProcessFileAsync1(_selectedFilePath, progress, _cancellationTokenSource.Token));
+                //var fileContent= await Task.Run(() => _fileProcessor.ProcessFileAsync1(_selectedFilePath, progress, _cancellationTokenSource.Token));
+                var fileContent= await Task.Run(() => _fileReader.ReadFileAsync(_selectedFilePath, progress, _cancellationTokenSource.Token));
                 var sortedWords = await Task.Run(() => _fileProcessor.ProcessFileAsync2(fileContent, progress, _cancellationTokenSource.Token));
 
                 await DisplayOutputText(sortedWords);
