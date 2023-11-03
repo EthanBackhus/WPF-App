@@ -5,7 +5,9 @@ using System.Linq;
 using System.Printing;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using WPF_App.Interfaces;
 using static System.Net.Mime.MediaTypeNames;
@@ -21,13 +23,13 @@ namespace WPF_App.Methods
         {
         }
 
-        public async Task<string> ReadFileAsync(string filePath, IProgress<int> progress)
+        public async Task<string> ReadFileAsync(string filePath, IProgress<int> progress, CancellationToken cancellationToken)
         {
             try
             {
-                await using (FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize: 4096, useAsync: true))
+                await using (FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read,
+                                 FileShare.Read, bufferSize: 4096, useAsync: true))
                 {
-                    // Code that uses the file stream
                     using (StreamReader reader = new StreamReader(fileStream))
                     {
                         string text = await reader.ReadToEndAsync();
@@ -38,54 +40,17 @@ namespace WPF_App.Methods
                 }
 
             }
+            catch (OperationCanceledException e)
+            {
+                MessageBox.Show("Operation Cancelled.");
+                return string.Empty;
+            }
             catch (Exception exception)
             {
-                Console.WriteLine(exception.Message); // Change this to log the exception or handle it appropriately
+                throw new Exception(exception.Message); // file not found?
                 throw new FileNotFoundException();
             }
         }
     }
 }
-
-/*
-await using (FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize: 4096, useAsync: true))
-   {
-   // Code that uses the file stream
-   using (StreamReader reader = new StreamReader(fileStream))
-   {
-   string text = await reader.ReadToEndAsync();
-   double percentRead = reader.BaseStream.Position / fileStream.Length;
-   progress.Report((int) percentRead);
-   return text;
-   }
-   }
-
-
-using (FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize: 4096, useAsync: true))
-   {
-   using (StreamReader reader = new StreamReader(fileStream))
-   {
-   char[] buffer = new char[4096];
-   long totalBytesRead = 0;
-   long fileLength = fileStream.Length;
-   StringBuilder fileContents = new StringBuilder();
-   
-   while (!reader.EndOfStream)
-   {
-   int bytesRead = await reader.ReadAsync(buffer, 0, buffer.Length);
-   totalBytesRead += bytesRead;
-   double percentRead = (double)totalBytesRead / fileLength * 100;
-   //progress.Report((int)percentRead);
-   
-   fileContents.Append(buffer, 0, bytesRead);
-   }
-   
-   // At this point, you have read the entire file
-   progress.Report(100);
-   
-   return (fileContents.ToString());
-   }
-   }
-   
- */
 

@@ -34,14 +34,12 @@ namespace WPF_App
     /// </summary>
     public partial class MainWindow : Window
     {
-        private IFileProcessor _fileProcessor;
+        private readonly IFileProcessor _fileProcessor;
         private CancellationTokenSource _cancellationTokenSource;
         private string _selectedFilePath;
-        private IFileParse _fileParser;
-        //private FileParse _fileParser;
-        private IDisplay _display;
-        private IFileReader _fileReader;
-        private TextBox _rawTextBox, _outputTextBox;
+        private readonly IFileParse _fileParser;
+        private readonly IDisplay _display;
+        private readonly IFileReader _fileReader;
 
         public ObservableCollection<KeyValuePairViewModel<string, int>> KeyValuePairs { get; set; }
 

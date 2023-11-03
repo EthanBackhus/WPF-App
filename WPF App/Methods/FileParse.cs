@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Threading;
 using WPF_App.Interfaces;
 
@@ -23,44 +24,59 @@ namespace WPF_App.Methods
         
         public async Task<Dictionary<string, int>> ParseFileAsync(string fileContent, IProgress<int> progress, CancellationToken cancellationToken)
         {
-            _words = new Dictionary<string, int>();
-
-            var updatedFileContent = RemoveAllNewlines(fileContent);
-            string[] parsedStrings = updatedFileContent.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            var updateFrequency = parsedStrings.Length / 100;
-            int percent = 0;
-
-            for (int i = 0; i < parsedStrings.Length; i++)
+            try
             {
-                cancellationToken.ThrowIfCancellationRequested();
+                _words = new Dictionary<string, int>();
 
-                if (!_words.ContainsKey(parsedStrings[i]))
+                var updatedFileContent = RemoveAllNewlines(fileContent);
+                string[] parsedStrings = updatedFileContent.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                var updateFrequency = parsedStrings.Length / 100;
+                int percent = 0;
+
+                for (int i = 0; i < parsedStrings.Length; i++)
                 {
-                    _words.Add(parsedStrings[i], 1);
-                }
-                else
-                {
-                    _words[parsedStrings[i]]++;
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    if (!_words.ContainsKey(parsedStrings[i]))
+                    {
+                        _words.Add(parsedStrings[i], 1);
+                    }
+                    else
+                    {
+                        _words[parsedStrings[i]]++;
+                    }
+
+                    if (i % updateFrequency == 0)
+                    {
+                        percent++;
+                        progress.Report(percent);
+                    }
                 }
 
-                if (i % updateFrequency == 0)
-                {
-                    percent++;
-                    progress.Report(percent);
-                }
+                SortWordsAsync();
+
+                return _words;
+            }
+            catch (InvalidOperationException e)
+            {
+                MessageBox.Show("Operation Canceled.");
+                return new Dictionary<string, int>();
+            }
+            catch (Exception e) // should I have this here?
+            {
+                throw new Exception(e.Message);
             }
 
-            SortWordsAsync();
-
-            return _words;
+            return new Dictionary<string, int>();
         }
 
+        // should this be static?
         private static string RemoveAllNewlines(string str)
         {
             return Regex.Replace(str, @"\t|\n|\r", " ");
         }
 
-        
+        // should this be async?
         private void SortWordsAsync()
         {
             _words = _words.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
