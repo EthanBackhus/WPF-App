@@ -9,6 +9,6 @@ namespace WPF_App.Interfaces
 {
     public interface IFileReader
     {
-        Task<string> ReadFileAsync(string filepath);
+        Task<string> ReadFileAsync(string filepath, IProgress<int> progress);
     }
 }

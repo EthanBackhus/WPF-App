@@ -1,11 +1,15 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -19,6 +23,9 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WPF_App.Interfaces;
 using WPF_App.Methods;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace WPF_App
 {
@@ -31,21 +38,20 @@ namespace WPF_App
         private CancellationTokenSource _cancellationTokenSource;
         private string _selectedFilePath;
         private IFileParse _fileParser;
+        //private FileParse _fileParser;
         private IDisplay _display;
         private IFileReader _fileReader;
         private TextBox _rawTextBox, _outputTextBox;
-        private ProgressBar _progressBar;
+
+        public ObservableCollection<KeyValuePairViewModel<string, int>> KeyValuePairs { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
-            _rawTextBox = rawTextBox;
-            _outputTextBox = outputTextBox;
             _fileReader = new FileReader();
-            _display = new Display(_rawTextBox, _outputTextBox);
+            _display = new Display();
             _fileParser = new FileParse();
-            _progressBar = progressBar;
-            _fileProcessor = new FileProcessor(_fileParser, _display, _fileReader, progressBar);
+            _fileProcessor = new FileProcessor(_fileParser, _display, _fileReader);
         }
 
         private void Browse_Click(object sender, RoutedEventArgs e)
@@ -77,14 +83,18 @@ namespace WPF_App
 
             try
             {
-                IProgress<int> progress = new Progress<int>(x => progressBar.Value = x);
-                await _fileProcessor.ProcessFileAsync(_selectedFilePath, progress, _cancellationTokenSource.Token);
+                var progress = new Progress<int>(x => progressBar.Value = x);
+                var fileContent= await Task.Run(() => _fileProcessor.ProcessFileAsync1(_selectedFilePath, progress, _cancellationTokenSource.Token));
+                var sortedWords = await Task.Run(() => _fileProcessor.ProcessFileAsync2(fileContent, progress, _cancellationTokenSource.Token));
 
+                await DisplayOutputText(sortedWords);
+
+                //await _fileProcessor.ProcessFileAsync(_selectedFilePath, progress, _cancellationTokenSource.Token);
                 browseButton.IsEnabled = true;
                 startButton.IsEnabled = true;
 
                 //clear progress bar
-                progressBar.Value = 0;
+                //progressBar.Value = 0
             }
             catch (Exception exception) // maybe change to operation failed exception
             {
@@ -100,7 +110,25 @@ namespace WPF_App
 
         private async void Cancel_Click(object sender, RoutedEventArgs e)
         {
+            progressBar.Value = 0;
             _cancellationTokenSource?.Cancel();
         }
+
+        public async Task DisplayOutputText(Dictionary<string, int> words)
+        {
+            DataContext = null;
+            KeyValuePairs = null;
+
+            KeyValuePairs = new ObservableCollection<KeyValuePairViewModel<string, int>>(
+                words.Select(kv => new KeyValuePairViewModel<string, int> { Key = kv.Key, Value = kv.Value }));
+
+            DataContext = this;
+        }
+    }
+
+    public class KeyValuePairViewModel<TKey, TValue>
+    {
+        public TKey Key { get; set; }
+        public TValue Value { get; set; }
     }
 }

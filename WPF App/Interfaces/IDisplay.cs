@@ -9,7 +9,6 @@ namespace WPF_App.Interfaces
 {
     public interface IDisplay
     {
-        public Task DisplayRawText(string text);
-        public Task DisplayOutputText(Dictionary<string, int> words);
+        
     }
 }

@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Security.RightsManagement;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 using WPF_App.Interfaces;
 
 namespace WPF_App.Methods
@@ -15,20 +17,20 @@ namespace WPF_App.Methods
     {
         private Dictionary<string, int> _words;
 
-        
         public FileParse()
         {
-            _words = new Dictionary<string, int>();
         }
         
-
         public async Task<Dictionary<string, int>> ParseFileAsync(string fileContent, IProgress<int> progress, CancellationToken cancellationToken)
         {
             _words = new Dictionary<string, int>();
 
             var updatedFileContent = RemoveAllNewlines(fileContent);
             string[] parsedStrings = updatedFileContent.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            for(int i = 0; i < parsedStrings.Length; i++)
+            var updateFrequency = parsedStrings.Length / 100;
+            int percent = 0;
+
+            for (int i = 0; i < parsedStrings.Length; i++)
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
@@ -41,8 +43,11 @@ namespace WPF_App.Methods
                     _words[parsedStrings[i]]++;
                 }
 
-                int progressPercentage = (i * 100) / parsedStrings.Length;
-                progress.Report(progressPercentage);
+                if (i % updateFrequency == 0)
+                {
+                    percent++;
+                    progress.Report(percent);
+                }
             }
 
             SortWordsAsync();
