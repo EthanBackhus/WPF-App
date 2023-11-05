@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Threading;
 using WPF_App.Interfaces;
 
@@ -49,7 +50,8 @@ namespace WPF_App.Methods
                     if (i % updateFrequency == 0)
                     {
                         percent++;
-                        progress.Report(percent);
+                        var reportedPercent = (percent / 2) + 50;
+                        progress.Report(reportedPercent);
                     }
                 }
 
@@ -57,17 +59,16 @@ namespace WPF_App.Methods
 
                 return _words;
             }
-            catch (InvalidOperationException e)
+            catch (OperationCanceledException exception)
             {
-                MessageBox.Show("Operation Canceled.");
+                MessageBox.Show(exception.Message);
+                progress.Report(0);
                 return new Dictionary<string, int>();
             }
             catch (Exception e) // should I have this here?
             {
                 throw new Exception(e.Message);
             }
-
-            return new Dictionary<string, int>();
         }
 
         // should this be static?

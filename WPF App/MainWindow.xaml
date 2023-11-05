@@ -15,7 +15,7 @@
         <Button Content="Browse File" Name="browseButton" HorizontalAlignment="Left" Margin="53,31,0,0" VerticalAlignment="Top" Width="150" Click="Browse_Click"/>
         <Button Content="Start" Name="startButton" HorizontalAlignment="Left" Margin="53,115,0,0" VerticalAlignment="Top" Click="Start_Click"/>
         <Label Content="Selected File: " Name="selectedFileLabel" HorizontalAlignment="Left" Margin="53,56,0,0" VerticalAlignment="Top" Width="186"/>
-        <DataGrid ItemsSource="{Binding KeyValuePairs}" AutoGenerateColumns="True" Margin="38,171,36,-157"/>
+        <DataGrid Name="output" ItemsSource="{Binding KeyValuePairs}" AutoGenerateColumns="True" Margin="38,171,36,-157"/>
 
     </Grid>
 

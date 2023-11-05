@@ -17,9 +17,6 @@ namespace WPF_App.Methods
 {
     public class FileReader : IFileReader
     {
-        private string filePath;
-        private IDisplay _display;
-
         public FileReader()
         {
         }
@@ -33,55 +30,37 @@ namespace WPF_App.Methods
                 {
                     using (StreamReader reader = new StreamReader(fileStream))
                     {
-                        long progressBytesRead = 0;
+                        float totalBytes = fileStream.Length; // Get total file size
+                        float progressBytesRead = 0;
                         StringBuilder sb = new StringBuilder();
                         char[] buffer = new char[4096];
 
                         while (!reader.EndOfStream)
                         {
-                            // Read a chunk of data
                             int charsRead = await reader.ReadBlockAsync(buffer, 0, buffer.Length);
+                            progressBytesRead += charsRead;
 
-                            // Update the progress
-                            progressBytesRead += charsRead * 2;
-                            progress.Report((int)(progressBytesRead / fileStream.Length * 100));
+                            var progressToReport = ((progressBytesRead / totalBytes) * 100) / 2;
+                            progress.Report((int)progressToReport);
 
-                            // Append the chunk to the string builder
                             sb.Append(buffer, 0, charsRead);
                         }
                         var str = sb.ToString();
 
-                        // Return the string builder's contents
                         return (str);
                     }
                 }
             }
             catch (OperationCanceledException e)
             {
-                MessageBox.Show("Operation Cancelled.");
+                MessageBox.Show(e.Message);
+                progress.Report(0);
                 return string.Empty;
             }
             catch (Exception exception)
             {
                 throw new Exception(exception.Message); // file not found?
-                throw new FileNotFoundException();
             }
-
-            return string.Empty;
         }
     }
 }
-
-/*
-await using (FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read,
-   FileShare.Read, bufferSize: 4096, useAsync: true))
-   {
-   using (StreamReader reader = new StreamReader(fileStream))
-   {
-   string text = await reader.ReadToEndAsync();
-   double percentRead = reader.BaseStream.Position / fileStream.Length;
-   //progress.Report((int)percentRead);
-   return text;
-   }
-   }
-*/
