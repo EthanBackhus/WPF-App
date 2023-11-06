@@ -5,6 +5,6 @@ namespace WPF_App.Interfaces
 {
     public interface IDisplay
     {
-        Task DisplayOutput(Dictionary<string, int> sortedWords);
+        Task DisplayOutputAsync(Dictionary<string, int> sortedWords);
     }
 }

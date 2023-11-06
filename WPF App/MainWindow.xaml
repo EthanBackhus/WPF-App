@@ -10,16 +10,17 @@
     <Grid Margin="0,0,0,188">
         <Label Content="Output:" HorizontalAlignment="Left" Margin="38,140,0,0" VerticalAlignment="Top" Width="128"/>
 
-        <ProgressBar Name="progressBar"  HorizontalAlignment="Left" Height="15" Margin="52,87,0,0" VerticalAlignment="Top" Width="275" />
+        <ProgressBar Name="progressBar"  HorizontalAlignment="Left" Height="15" Margin="121,87,0,0" VerticalAlignment="Top" Width="275" />
         <Button Content="Cancel" Name="cancelButton" HorizontalAlignment="Left" Margin="96,115,0,0" VerticalAlignment="Top" Click="Cancel_Click"/>
         <Button Content="Browse File" Name="browseButton" HorizontalAlignment="Left" Margin="53,31,0,0" VerticalAlignment="Top" Width="150" Click="Browse_Click"/>
         <Button Content="Start" Name="startButton" HorizontalAlignment="Left" Margin="53,115,0,0" VerticalAlignment="Top" Click="Start_Click"/>
-        <Label Content="Selected File: " Name="selectedFileLabel" HorizontalAlignment="Left" Margin="53,56,0,0" VerticalAlignment="Top" Width="186"/>
+        <Label Content="Selected File: " Name="selectedFileLabel" HorizontalAlignment="Left" Margin="53,56,0,0" VerticalAlignment="Top" Width="398"/>
         <DataGrid Name="output" ItemsSource="{Binding KeyValuePairs}" AutoGenerateColumns="False" Margin="38,171,36,-157">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Word" Binding="{Binding Word}" />
                 <DataGridTextColumn Header="Count" Binding="{Binding Count}" />
             </DataGrid.Columns>
         </DataGrid>
+        <Label Content="Progress:" HorizontalAlignment="Left" Margin="53,82,0,0" VerticalAlignment="Top" Width="63"/>
     </Grid>
 </Window>

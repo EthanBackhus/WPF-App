@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -29,12 +30,13 @@ namespace WPF_App
         private void Browse_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+            openFileDialog.Filter = "Text files (*.txt)|*.txt"; ;
 
             if (openFileDialog.ShowDialog() == true)
             {
                 _selectedFilePath = openFileDialog.FileName;
-                selectedFileLabel.Content = $"Selected File: {_selectedFilePath}";
+                var truncatedFilePath = Path.GetFileName(_selectedFilePath);
+                selectedFileLabel.Content = $"Selected File: {truncatedFilePath}";
             }
         }
 
@@ -57,14 +59,16 @@ namespace WPF_App
                 var progress = new Progress<int>(x => progressBar.Value = x);
                 var fileContent= await Task.Run(() => _fileReader.ReadFileAsync(_selectedFilePath, progress, _cancellationTokenSource.Token));
                 var sortedWords = await Task.Run(() => _fileParser.ParseFileAsync(fileContent, progress, _cancellationTokenSource.Token));
-                await _display.DisplayOutput(sortedWords);
+                await _display.DisplayOutputAsync(sortedWords);
 
                 browseButton.IsEnabled = true;
                 startButton.IsEnabled = true;
-            }
-            catch (OperationCanceledException exception)
-            {
+
                 progressBar.Value = 0;
+            }
+            catch (Exception exception)
+            {
+                throw new Exception(exception.Message);
             }
         }
 

@@ -25,7 +25,7 @@ namespace WPF_App.Methods
 
         private ObservableCollection<KeyValuePairViewModel<string, int>> _keyValuePairs;
 
-        public async Task DisplayOutput(Dictionary<string, int> sortedWords)
+        public async Task DisplayOutputAsync(Dictionary<string, int> sortedWords)
         {
             _keyValuePairs = new ObservableCollection<KeyValuePairViewModel<string, int>>(
                 sortedWords.Select(kv => new KeyValuePairViewModel<string, int> { Word = kv.Key, Count = kv.Value }));
