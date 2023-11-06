@@ -14,7 +14,7 @@ namespace WPF_App
     {
         private CancellationTokenSource _cancellationTokenSource;
         private string _selectedFilePath;
-        private readonly IFileParse _fileParser;
+        private readonly IFileParser _fileParser;
         private readonly IDisplay _display;
         private readonly IFileReader _fileReader;
 
@@ -23,7 +23,7 @@ namespace WPF_App
             InitializeComponent();
             _fileReader = new FileReader();
             _display = new Display(output);
-            _fileParser = new FileParse();
+            _fileParser = new FileParser();
         }
 
         private void Browse_Click(object sender, RoutedEventArgs e)

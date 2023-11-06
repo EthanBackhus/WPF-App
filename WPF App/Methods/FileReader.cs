@@ -1,17 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Printing;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using WPF_App.Interfaces;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace WPF_App.Methods
 {
@@ -30,7 +23,7 @@ namespace WPF_App.Methods
                 {
                     using (StreamReader reader = new StreamReader(fileStream))
                     {
-                        float totalBytes = fileStream.Length; // Get total file size
+                        float totalBytes = fileStream.Length;
                         float progressBytesRead = 0;
                         StringBuilder sb = new StringBuilder();
                         char[] buffer = new char[4096];
@@ -59,7 +52,7 @@ namespace WPF_App.Methods
             }
             catch (Exception exception)
             {
-                throw new Exception(exception.Message); // file not found?
+                throw new Exception(exception.Message);
             }
         }
     }
